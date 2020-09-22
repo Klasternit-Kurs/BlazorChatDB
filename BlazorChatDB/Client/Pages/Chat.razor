@@ -1,0 +1,45 @@
+﻿@page "/chat"
+@using Microsoft.AspNetCore.SignalR.Client
+@using BlazorChatDB.Shared
+@inject NavigationManager _nm
+
+<p><b>@_greska</b></p>
+<EditForm Model="_kor" OnSubmit="Registracija">
+	<p>
+		Ime:
+		<InputText @bind-Value="_kor.Uname" />
+	</p>
+	<p>
+		Sifra:
+		<InputText @bind-Value="_kor.Sifra" />
+	</p>
+	<button type="submit">Registruj se!</button>
+</EditForm>
+
+@code 
+{
+	public Korisnik _kor = new Korisnik();
+	private HubConnection _hc;
+	private string _greska = "";
+
+	override protected async Task OnInitializedAsync()
+	{
+		_hc = new HubConnectionBuilder().WithUrl(_nm.ToAbsoluteUri("reg")).Build();
+		_hc.On<bool, string>("rezreg", (uspeh, greske) =>
+		{
+			if (uspeh)
+				_kor = new Korisnik();
+			else
+				_greska = greske;
+		});
+		await _hc.StartAsync();
+	}
+
+	private void Registracija()
+	{
+		_kor.UclanioSe = DateTime.Now;
+		_hc.SendAsync("RegistrujSe", _kor);
+	}
+
+
+}
