@@ -17,6 +17,10 @@ namespace BlazorChatDB.Server.Hubs
 			_logger = logger;
 		}
 
+		public void PorukaServer(Poruka p)
+		{
+			Clients.All.SendAsync("PorukaKlijent", p);
+		}
 
 		public void LogInServ(Korisnik k)
 		{

@@ -6,6 +6,16 @@
 @if (@_ulogovan)
 {
 	<h3>Chat</h3>
+	<EditForm Model="_poruka" OnSubmit="PosaljiPoruku">
+		<p>Poruka:<InputText @bind-Value="_poruka.Sadrzaj"/></p>
+		<button class="btn btn-primary" type="submit">Log in</button>
+	</EditForm>
+	<ul>
+		@foreach (Poruka p in _primljenePoruke)
+		{
+			<li>[@p.Vreme] @p.Posiljaoc.Uname: @p.Sadrzaj</li>
+		}
+	</ul>
 }
 else
 {
@@ -14,7 +24,7 @@ else
 	<EditForm Model="_korisnik" OnSubmit="Login">
 		<p>Ime:<InputText @bind-Value="_korisnik.Uname"/></p>
 		<p>Sifra:<InputText @bind-Value="_korisnik.Sifra"/></p>
-		<button class="btn btn-outline-primary" type="submit"/>
+		<button class="btn btn-outline-primary" type="submit">Posalji</button>
 	</EditForm>
 }
 
@@ -25,6 +35,8 @@ else
 	private Korisnik _korisnik = new Korisnik();
 	private HubConnection _hc;
 	private string _greska;
+	private List<Poruka> _primljenePoruke = new List<Poruka>();
+	private Poruka _poruka = new Poruka();
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -45,6 +57,15 @@ else
 			}
 		});
 
+		_hc.On<Poruka>("PorukaKlijent", (p) =>
+		{
+			if (_ulogovan)
+			{
+				_primljenePoruke.Add(p);
+				StateHasChanged();
+			}
+		});
+
 		await _hc.StartAsync();
 	}
 
@@ -52,6 +73,14 @@ else
 	{
 		_greska = "";
 		_hc.SendAsync("LogInServ", _korisnik);
+	}
+
+	private void PosaljiPoruku()
+	{
+		_poruka.Posiljaoc = _korisnik;
+		_poruka.Vreme = DateTime.Now;
+		_hc.SendAsync("PorukaServer", _poruka);
+		_poruka = new Poruka();
 	}
 
 }
