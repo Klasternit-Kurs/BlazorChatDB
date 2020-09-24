@@ -13,7 +13,7 @@ namespace BlazorChatDB.Server
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-75VO5EN\TESTSERVER;Initial Catalog=NekaBaza;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+			optionsBuilder.UseMySQL(@"Server=localhost;User=chatKor;password='nekasifra';Persist Security Info=False;Database=ChatDB;");
 		}
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

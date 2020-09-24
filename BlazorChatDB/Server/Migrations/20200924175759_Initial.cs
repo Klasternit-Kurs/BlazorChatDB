@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using MySql.Data.EntityFrameworkCore.Metadata;
 
 namespace BlazorChatDB.Server.Migrations
 {
@@ -12,7 +13,7 @@ namespace BlazorChatDB.Server.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Uname = table.Column<string>(nullable: true),
                     Sifra = table.Column<string>(nullable: true),
                     UclanioSe = table.Column<DateTime>(nullable: false)
