@@ -49,6 +49,7 @@ namespace BlazorChatDB.Server
 				endpoints.MapRazorPages();
 				endpoints.MapControllers();
 				endpoints.MapHub<Hubs.Registracija>("reg");
+				endpoints.MapHub<Hubs.Chat>("ch");
 				endpoints.MapFallbackToFile("index.html");
 			});
 		}

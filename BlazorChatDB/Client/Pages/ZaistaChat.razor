@@ -1,0 +1,57 @@
+﻿@page "/chat"
+@using BlazorChatDB.Shared
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager _nm
+ 
+@if (@_ulogovan)
+{
+	<h3>Chat</h3>
+}
+else
+{
+	<h3>Login</h3>
+	<p><b>@_greska</b></p>
+	<EditForm Model="_korisnik" OnSubmit="Login">
+		<p>Ime:<InputText @bind-Value="_korisnik.Uname"/></p>
+		<p>Sifra:<InputText @bind-Value="_korisnik.Sifra"/></p>
+		<button class="btn btn-outline-primary" type="submit"/>
+	</EditForm>
+}
+
+
+@code
+{
+	private bool _ulogovan;
+	private Korisnik _korisnik = new Korisnik();
+	private HubConnection _hc;
+	private string _greska;
+
+	protected override async Task OnInitializedAsync()
+	{
+		_hc = new HubConnectionBuilder().WithUrl(_nm.ToAbsoluteUri("ch")).Build();
+
+		_hc.On<bool, Korisnik>("KorOdServera", (uspeh, kor) =>
+		{
+			if (uspeh)
+			{
+				_ulogovan = true;
+				_korisnik = kor;
+				StateHasChanged();
+			}
+			else
+			{
+				_greska = "Korisnicko ili sifra nisu u redu!";
+				StateHasChanged();
+			}
+		});
+
+		await _hc.StartAsync();
+	}
+
+	private void Login()
+	{
+		_greska = "";
+		_hc.SendAsync("LogInServ", _korisnik);
+	}
+
+}

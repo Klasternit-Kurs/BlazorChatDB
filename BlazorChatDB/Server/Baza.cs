@@ -13,9 +13,8 @@ namespace BlazorChatDB.Server
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseMySQL(@"Server=127.0.0.1;User=test;password='sifra';Persist Security Info=False;Initial Catalog=ProbnaBaza;");
+			optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-75VO5EN\TESTSERVER;Initial Catalog=NekaBaza;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 		}
-
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Korisnik>().HasKey(k => k.ID);

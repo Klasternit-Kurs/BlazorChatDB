@@ -25,13 +25,13 @@ namespace BlazorChatDB.Server.Hubs
 			if (db.Korisniks.Where(kor => kor.Uname == k.Uname).Any())
 			{
 				_log.LogError("Vec postoji korisnik");
-				Clients.Caller.SendAsync("regrez", false, "Vec postoji!");
+				Clients.Caller.SendAsync("rezreg", false, "Vec postoji!");
 			} else
 			{
 				db.Korisniks.Add(k);
 				db.SaveChanges();
 				_log.LogInformation("Sve ok :)");
-				Clients.Caller.SendAsync("regrez", true, null);
+				Clients.Caller.SendAsync("rezreg", true, null);
 			}
 		}
 	}

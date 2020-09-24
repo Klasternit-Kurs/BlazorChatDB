@@ -1,4 +1,4 @@
-﻿@page "/chat"
+﻿@page "/reg"
 @using Microsoft.AspNetCore.SignalR.Client
 @using BlazorChatDB.Shared
 @inject NavigationManager _nm
@@ -27,8 +27,9 @@
 		_hc = new HubConnectionBuilder().WithUrl(_nm.ToAbsoluteUri("reg")).Build();
 		_hc.On<bool, string>("rezreg", (uspeh, greske) =>
 		{
+			Console.WriteLine("Pozvan od servera");
 			if (uspeh)
-				_kor = new Korisnik();
+				_nm.NavigateTo("/chat");
 			else
 				_greska = greske;
 		});
